@@ -109,7 +109,8 @@ https://www.kaggle.com/datasets/ankitverma2010/ecommerce-customer-churn-analysis
 <br>Bedeutung: Der Gesamtbetrag an Cashback, den der Kunde erhalten hat.<br>Interpretation:
 <br>einzigartige Werte: [159.93 120.9  120.28 ... 173.77 287.91 173.78]
 
-## Verwendet Code
+## Verwendeter Code
+<details open>
 ```
 # Variable und Datentyp ausgeben
 for column in df.columns:
@@ -120,6 +121,7 @@ for column in df.columns:
 for column_header in df.columns:
     print(f"{column_header}  <br>einzigartige Werte: {df[column_header].unique()}")
 ```
+</details>
 
 ## Daten bereinigen
 ### Überflüssige Varialen 
