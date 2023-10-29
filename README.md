@@ -126,7 +126,6 @@ for column_header in df.columns:
 ```
 </details>
 
-
 # Daten bereinigen
 ### Überflüssige Variablen 
 - Variable ***'CustomerID' Rausnehmen*** da dies eine uninteressante information für die Datenverarbeitung ist
@@ -134,9 +133,8 @@ for column_header in df.columns:
 - Variable ***'PreferredPaymentMode'*** Werte ***'Credit Card' und 'CC'*** sowie ***'Cash on Delivery' und 'COD' zusammenführen*** da die bezeichung Synonme sind und das selbe beschreiben
 - Variable ***'PreferredOrderCat'*** Werte ***'Mobile' und 'Mobile Phone' Zusammenführen*** Zusammenführen da die bezeichnung Synonyme sind und das selbe beschreiben
 ### Datentypen anpassen
-- Variablen ***'Tenure', 'WarehouseToHome', 'HourSpendOnApp', 'OrderAmountHikeFromLastYear'*** könnten in int64 umgewandelt werden. Zur weiteren berechnung wie bspw. den Durchschnitt wäre dies jedoch nicht sinnvoll da damit Information wegfallen würden daher => ***Datentyp bestehen lassen***
+- ***Datentyp bestehen lassen*** =>  Variablen ***'Tenure', 'WarehouseToHome', 'HourSpendOnApp', 'OrderAmountHikeFromLastYear'*** könnten in int64 umgewandelt werden. Zur weiteren berechnung wie bspw. den Durchschnitt wäre dies jedoch nicht sinnvoll da damit Information wegfallen würden.
 ### Umgang mit NaN-Werten
-
 <details>
 <summary>NaN Werte</summary>
 CustomerID =                      0<br>
@@ -157,7 +155,12 @@ Complain =                        0<br>
 OrderAmountHikeFromlastYear =   265<br>
 CouponUsed =                    256<br>
 OrderCount =                    258<br>
- 
+</details>
+<br>
+
+- ***NaN Werte werden durch den Median der Jeweiligen Variable ersetzt*** Grund dafür ist das der Median resistenter gegen ausreißer ist (im gegensatz zum Durschnittswert). Das Entfernen von den zeilen mit den jeweiligen fehlenden Werten möchte vermieden werden da diese mehr als 5% des Datensatzes aus machen und dadurch Wichtige Informationen verloren gehen würden.
+
+## Verwendeter Code
 <details>
 
 ```python
@@ -170,6 +173,16 @@ df.drop('CustomerID', axis=1, inplace=True)
 ```python
 # Die Werte 'Mobile Phone' und 'Phone' der Variable 'PreferredLoginDevice' unter 'Mobile Device' zusammengeführt
 df['PreferredLoginDevice'].replace(['Mobile Phone', 'Phone'], 'Mobile Device', inplace=True)
+```
+
+```python
+## Die Werte 'Credit Card' und 'CC' der Variable 'PreferredPaymentMode' unter 'Credit Card' zusammengeführt
+df['PreferredPaymentMode'].replace(['Credit Card', 'CC'], 'Credit Card', inplace=True)
+```
+
+```python
+## Die Werte 'Cash on Delivery' und 'COD' der Variable 'PreferredPaymentMode' unter 'Cash on Delivery' zusammengeführt
+df['PreferredPaymentMode'].replace(['Cash on Delivery', 'COD'], 'Cash on Delivery', inplace=True)
 ```
 
 ```Python
