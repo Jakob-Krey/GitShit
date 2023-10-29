@@ -2,6 +2,7 @@
 
 
 ### [Über Den Datensatz](#der-datensatz)
+### [Bereinigung des Datensatzes](#daten-bereinigen)
 
 # Der Datensatz
 
@@ -109,36 +110,80 @@ https://www.kaggle.com/datasets/ankitverma2010/ecommerce-customer-churn-analysis
 <br>Bedeutung: Der Gesamtbetrag an Cashback, den der Kunde erhalten hat.<br>Interpretation:
 <br>einzigartige Werte: [159.93 120.9  120.28 ... 173.77 287.91 173.78]
 
-## Verwendeter Code
+## verwendeter Code
+<details>
 
-<details open>
-
-```python:
-# Variable und Datentyp ausgeben
+```python
+# Variable und Datentyp usw. für jede Variable auszugeben
 for column in df.columns:
     print(f"- ***{column}*** <br>Datentyp: ***{df[column].dtype}*** <br>Bedeutung: <br>Interpretation:")
 ```
 
-```python:
+```python
 # Jeden einzigartigen Wert einer Variablen ausgeben
 for column_header in df.columns:
     print(f"{column_header}  <br>einzigartige Werte: {df[column_header].unique()}")
 ```
 </details>
 
-## Daten bereinigen
-### Überflüssige Varialen 
+
+# Daten bereinigen
+### Überflüssige Variablen 
 - Variable ***'CustomerID' Rausnehmen*** da dies eine uninteressante information für die Datenverarbeitung ist
 ### Synonyme oder ähnliche Werte
 - Variable ***'PreferredPaymentMode'*** Werte ***'Credit Card' und 'CC'*** sowie ***'Cash on Delivery' und 'COD' zusammenführen*** da die bezeichung Synonme sind und das selbe beschreiben
 - Variable ***'PreferredOrderCat'*** Werte ***'Mobile' und 'Mobile Phone' Zusammenführen*** Zusammenführen da die bezeichnung Synonyme sind und das selbe beschreiben
 ### Datentypen anpassen
-- Variablen ***'Tenure', 'WarehouseToHome', 'HourSpendOnApp', 'OrderAmountHikeFromLastYear'*** könnten in int64 umgewandelt werden. Zur weiteren berechnung wie bspw. den Durchschnitt wäre dies jedoch nicht sinnvoll da damit Information wegfallen würden daher => ***Datentyp bestehn lassen***
+- Variablen ***'Tenure', 'WarehouseToHome', 'HourSpendOnApp', 'OrderAmountHikeFromLastYear'*** könnten in int64 umgewandelt werden. Zur weiteren berechnung wie bspw. den Durchschnitt wäre dies jedoch nicht sinnvoll da damit Information wegfallen würden daher => ***Datentyp bestehen lassen***
 ### Umgang mit NaN-Werten
 
+<details>
+<summary>NaN Werte</summary>
+CustomerID =                      0<br>
+Churn =                           0<br>
+Tenure =                        264<br>
+PreferredLoginDevice =            0<br>
+CityTier =                        0<br>
+WarehouseToHome =               251<br>
+PreferredPaymentMode =            0<br>
+Gender =                          0<br>
+HourSpendOnApp =                255<br>
+NumberOfDeviceRegistered =        0<br>
+PreferedOrderCat =                0<br>
+SatisfactionScore =               0<br>
+MaritalStatus =                   0<br>
+NumberOfAddress =                 0<br>
+Complain =                        0<br>
+OrderAmountHikeFromlastYear =   265<br>
+CouponUsed =                    256<br>
+OrderCount =                    258<br>
+ 
+<details>
+
+```python
+#Überflüssige Variablen entfernen
+
+# axis=1 => axis ist ein Parameter in Pandas, der angibt,  entlang welcher Achse eine Operation in einem DataFrame oder einer Series durchgeführt werden soll. axis=0 bezieht sich auf die Zeilenachse, und axis=1 bezieht sich auf die Spaltenachse. 
+df.drop('CustomerID', axis=1, inplace=True)
 ```
-# Jeden einzigartigen Wert einer Variablen ausgeben
-for column_header in df.columns:
-    print(f"{column_header}  <br>einzigartige Werte: {df[column_header].unique()}")
+
+```python
+# Die Werte 'Mobile Phone' und 'Phone' der Variable 'PreferredLoginDevice' unter 'Mobile Device' zusammengeführt
+df['PreferredLoginDevice'].replace(['Mobile Phone', 'Phone'], 'Mobile Device', inplace=True)
 ```
-  
+
+```Python
+# NaN Werte ermitteln
+df.isnull().sum()
+```
+
+```python
+# NaN Werte ersetzen
+for column in df:
+    if df[column].dtype == object:
+        continue
+    # fillna() => umgang mit NaN werten
+    # Inplace = True => gibt fest das dies über die Codezeile hinaus bestehen bleiben soll der Datensatz also fest verändert wird
+    df[column].fillna(df[column].median(), inplace=True)
+```
+</details>
