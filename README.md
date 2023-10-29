@@ -110,12 +110,15 @@ https://www.kaggle.com/datasets/ankitverma2010/ecommerce-customer-churn-analysis
 <br>einzigartige Werte: [159.93 120.9  120.28 ... 173.77 287.91 173.78]
 
 ## Verwendeter Code
+
 <details open>
+
 ```
 # Variable und Datentyp ausgeben
 for column in df.columns:
     print(f"- ***{column}*** <br>Datentyp: ***{df[column].dtype}*** <br>Bedeutung: <br>Interpretation:")
 ```
+
 ```
 # Jeden einzigartigen Wert einer Variablen ausgeben
 for column_header in df.columns:
