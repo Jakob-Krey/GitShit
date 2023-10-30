@@ -2,7 +2,7 @@
 
 
 ### [Über Den Datensatz](#der-datensatz)
-### [Bereinigung des Datensatzes](#daten-bereinigen)
+### [Aufarbeiteung des Datensatzes](#daten-bereinigen)
 
 # Der Datensatz
 
@@ -126,8 +126,8 @@ for column_header in df.columns:
 ```
 </details>
 
-# Daten bereinigen
-### Überflüssige Variablen 
+# Daten aufarbeiten
+### Überflüssige Variablen
 - Variable ***'CustomerID' Rausnehmen*** da dies eine uninteressante information für die Datenverarbeitung ist
 ### Synonyme oder ähnliche Werte
 - Variable ***'PreferredPaymentMode'*** Werte ***'Credit Card' und 'CC'*** sowie ***'Cash on Delivery' und 'COD' zusammenführen*** da die bezeichung Synonme sind und das selbe beschreiben
@@ -159,7 +159,10 @@ OrderCount =                    258<br>
 <br>
 
 - ***NaN Werte werden durch den Median der Jeweiligen Variable ersetzt*** Grund dafür ist das der Median resistenter gegen ausreißer ist (im gegensatz zum Durschnittswert). Das Entfernen von den zeilen mit den jeweiligen fehlenden Werten möchte vermieden werden da diese mehr als 5% des Datensatzes aus machen und dadurch Wichtige Informationen verloren gehen würden.
-
+### Übertragen von Text in numerische Werte
+- Variable: ***Gender, PreferredLoginDevice*** 
+### Kategoriale Variablen in Dummy-Variablen („One hot encoding“) überführen
+- Variablen: ***PreferredOrderCat, PreferredPaymentMode, MaritalStatus*** 
 ## Verwendeter Code
 <details>
 
@@ -198,5 +201,18 @@ for column in df:
     # fillna() => umgang mit NaN werten
     # Inplace = True => gibt fest das dies über die Codezeile hinaus bestehen bleiben soll der Datensatz also fest verändert wird
     df[column].fillna(df[column].median(), inplace=True)
+```
+
+```python
+# Die Variable Gender Nummerisch darstellen
+
+df['Gender'].replace({'Male': 0, 'Female': 1}, inplace=True)
+df['Gender'].unique()
+```
+```python
+# Die Variable PreferredLoginDevice Nummerisch darstellen
+
+df['PreferredLoginDevice'].replace({'Mobile Device': 0, 'Computer': 1}, inplace=True)
+df['PreferredLoginDevice'].unique()
 ```
 </details>
