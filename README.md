@@ -2,7 +2,7 @@
 
 
 ### [Über Den Datensatz](#der-datensatz)
-### [Aufarbeiteung des Datensatzes](#daten-bereinigen)
+### [Aufarbeiteung des Datensatzes](#daten-aufarbeiten)
 ### [Der Aufgearbeitete Datensatz](#aufgearbeiteter-datensatz)
 
 # Der Datensatz
@@ -11,7 +11,7 @@
 https://www.kaggle.com/datasets/ankitverma2010/ecommerce-customer-churn-analysis-and-prediction
 
 
-## Column header description and interpretation:
+## Beschreibung der Variablen:
 - ***CustomerID*** 
 <br>Datentyp: ***int64*** 
 <br>Bedeutung: Dies ist eine eindeutige Kennung oder Identifikationsnummer für jeden Kunden 
@@ -217,7 +217,309 @@ df_dummies = pd.get_dummies(df['PreferedOrderCat'], prefix='OrderCat')
 # pd.contact => die erstellten dummies zum df hinzufügen 
 df_with_dummies = pd.concat([df, df_dummies], axis=1)
 ```
+- Kategriale Variablen nach erzeugung der Dummy-Variablen entfernen
 
+```pyhon
+# Kategoriale Variablen die in Dummy-Variablen überfuhrt wurden Löschen
+
+df_with_dummies.drop('PreferedOrderCat', axis=1, inplace=True)
+df_with_dummies.drop('PreferredPaymentMode', axis=1, inplace=True)
+df_with_dummies.drop('MaritalStatus', axis=1, inplace=True)
+```
+
+### Umgang mit Ausreißern
+- *Ausreißer mittels IQR erkennen*
+
+<details>
+<summary>Ausreißer:</summary>
+Variable: Tenure
+<br>Durschnitt: 10.134103019538188
+<br>Median: 8.357951166584485
+<br>Minimum: 0
+<br>Maximum: 61
+<br>Q1(0,25): 3.0
+<br>Q3(0,75): 15.0
+<br>IQR: 12.0
+<br>Anzahl an Ausreißern: 4
+<br>Ausreißer:
+50<br>
+60<br>
+51<br>
+61<br>
+
+
+Variable: CityTier
+<br>Durschnitt: 1.6547069271758437
+<br>Median: 0.9153892691210666
+<br>Minimum: 1
+<br>Maximum: 3
+<br>Q1(0,25): 1.0
+<br>Q3(0,75): 3.0
+<br>IQR: 2.0
+<br>Anzahl an Ausreißern: 0
+<br>Ausreißer:
+
+
+Variable: WarehouseToHome
+<br>Durschnitt: 15.566785079928952
+<br>Median: 8.345961296394036
+<br>Minimum: 5.0
+<br>Maximum: 127.0
+<br>Q1(0,25): 9.0
+<br>Q3(0,75): 20.0
+<br>IQR: 11.0
+<br>Anzahl an Ausreißern: 2
+<br>Ausreißer:
+126.0<br>
+127.0<br>
+
+
+Variable: HourSpendOnApp
+<br>Durschnitt: 2.9346358792184724
+<br>Median: 0.7055280039478681
+<br>Minimum: 0.0
+<br>Maximum: 5.0
+<br>Q1(0,25): 2.0
+<br>Q3(0,75): 3.0
+<br>IQR: 1.0
+<br>Anzahl an Ausreißern: 6
+<br>Ausreißer:
+0.0<br>
+0.0<br>
+0.0<br>
+5.0<br>
+5.0<br>
+5.0<br>
+
+
+Variable: NumberOfDeviceRegistered
+<br>Durschnitt: 3.68898756660746
+<br>Median: 1.0239985188585785
+<br>Minimum: 1
+<br>Maximum: 6
+<br>Q1(0,25): 3.0
+<br>Q3(0,75): 4.0
+<br>IQR: 1.0
+<br>Anzahl an Ausreißern: 397
+<br>Ausreißer:
+Die ausreißer stellen mehr als 5% der Werte der Variable da<br>
+
+Variable: NumberOfAddress
+<br>Durschnitt: 4.214031971580817
+<br>Median: 2.5835855126063794
+<br>Minimum: 1
+<br>Maximum: 22
+<br>Q1(0,25): 2.0
+<br>Q3(0,75): 6.0
+<br>IQR: 4.0
+<br>Anzahl an Ausreißern: 4
+<br>Ausreißer:
+19<br>
+21<br>
+20<br>
+22<br>
+
+
+Variable: OrderAmountHikeFromlastYear
+<br>Durschnitt: 15.674600355239788
+<br>Median: 3.5910576608583926
+<br>Minimum: 11.0
+<br>Maximum: 26.0
+<br>Q1(0,25): 13.0
+<br>Q3(0,75): 18.0
+<br>IQR: 5.0
+<br>Anzahl an Ausreißern: 33
+<br>Ausreißer:
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+26.0<br>
+
+
+Variable: CouponUsed
+<br>Durschnitt: 1.7168738898756661
+<br>Median: 1.857639777461501
+<br>Minimum: 0.0
+<br>Maximum: 16.0
+<br>Q1(0,25): 1.0
+<br>Q3(0,75): 2.0
+<br>IQR: 1.0
+<br>Anzahl an Ausreißern: 629
+<br>Ausreißer:
+Die ausreißer stellen mehr als 5% der Werte der Variable da<br>
+
+Variable: OrderCount
+<br>Durschnitt: 2.9618117229129663
+<br>Median: 2.8792477181293767
+<br>Minimum: 1.0
+<br>Maximum: 16.0
+<br>Q1(0,25): 1.0
+<br>Q3(0,75): 3.0
+<br>IQR: 2.0
+<br>Anzahl an Ausreißern: 703
+<br>Ausreißer:
+Die ausreißer stellen mehr als 5% der Werte der Variable da<br>
+
+Variable: DaySinceLastOrder
+<br>Durschnitt: 4.459325044404974
+<br>Median: 3.570625540419597
+<br>Minimum: 0.0
+<br>Maximum: 46.0
+<br>Q1(0,25): 2.0
+<br>Q3(0,75): 7.0
+<br>IQR: 5.0
+<br>Anzahl an Ausreißern: 62
+<br>Ausreißer:
+15.0<br>
+15.0<br>
+15.0<br>
+17.0<br>
+16.0<br>
+17.0<br>
+15.0<br>
+17.0<br>
+17.0<br>
+17.0<br>
+17.0<br>
+16.0<br>
+17.0<br>
+15.0<br>
+30.0<br>
+15.0<br>
+15.0<br>
+15.0<br>
+17.0<br>
+16.0<br>
+17.0<br>
+15.0<br>
+17.0<br>
+46.0<br>
+17.0<br>
+17.0<br>
+17.0<br>
+16.0<br>
+16.0<br>
+16.0<br>
+16.0<br>
+18.0<br>
+17.0<br>
+18.0<br>
+16.0<br>
+18.0<br>
+15.0<br>
+15.0<br>
+18.0<br>
+18.0<br>
+15.0<br>
+15.0<br>
+17.0<br>
+15.0<br>
+16.0<br>
+31.0<br>
+16.0<br>
+16.0<br>
+16.0<br>
+18.0<br>
+17.0<br>
+18.0<br>
+16.0<br>
+18.0<br>
+15.0<br>
+15.0<br>
+18.0<br>
+18.0<br>
+15.0<br>
+15.0<br>
+17.0<br>
+15.0<br>
+
+
+Variable: CashbackAmount
+<br>Durschnitt: 177.22303019538188
+<br>Median: 49.20703617486409
+<br>Minimum: 0.0
+<br>Maximum: 324.99
+<br>Q1(0,25): 145.77
+<br>Q3(0,75): 196.3925
+<br>IQR: 50.6225
+<br>Anzahl an Ausreißern: 438
+<br>Ausreißer:
+Die ausreißer stellen mehr als 5% der Werte der Variable da<br>
+</details>
+
+```python
+# Ausreißer ausgeben 
+for column in df:
+    if df[column].dtype == 'object' or column == 'Churn' or column == 'PreferredLoginDevice' or column == 'City Tier' or column == 'SatisfactionScore' or column == 'Gender' or column == 'Complain':
+        continue
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    outliers = df[(df[column] < Q1 - 1.5 * IQR) | (df[column] > Q3 + 1.5 * IQR)]
+    print(f"Variable: {column}")
+    print(f"<br>Durschnitt: {df[column].mean()}")
+    print(f"<br>Median: {df[column].std()}")
+    print(f"<br>Minimum: {df[column].min()}")
+    print(f"<br>Maximum: {df[column].max()}")
+    print(f"<br>Q1(0,25): {Q1}")
+    print(f"<br>Q3(0,75): {Q3}")
+    print(f"<br>IQR: {IQR}")
+    print(f"<br>Anzahl an Ausreißern: {outliers[column].size}")
+    print("<br>Ausreißer:")
+    if outliers[column].size >= 280:
+            print("Die ausreißer stellen mehr als 5% der Werte der Variable da<br>\n")
+            continue
+    for outlier in outliers[column]:
+         print(f"{outlier}<br>")
+    print("\n")
+```
+
+- ***Ausreißer kappen*** Werte, die einen bestimmten Schwellenwert (Q1 - 1.5 * IQR bzw. Q3 + 1.5 * IQR) überschreiten, werden auf diesen Schwellenwert reduziert.<br> Grund: wir wollen wissen was in einem "Typischen Fall" dazu führt das jemand von dem Unternehmen abwandert und suchen nicht nach Anomalyen
+<br>***Ausreißer > 5% des Datensatzes nicht kappen*** 
+<br>Grund: Ein zu großer Informationsverlust ergibt sich und für diese Variablen werden die "Ausreißer" nicht als echte Ausreißer angesehen
+```python
+for column in df:
+    if df[column].dtype == 'object' or column in ['Churn', 'PreferredLoginDevice', 'CityTier', 'SatisfactionScore', 'Gender', 'Complain', 'NumberOfDeviceRegistered', 'CouponUsed', 'OrderCount', 'CashbackAmount']:
+        continue
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    #Die Methode clip begrenzt die Werte einer Serie auf ein gegebenes Intervall, das durch die Argumente lower und upper festgelegt wird. In diesem Fall setzen wir die Werte unter Q1 - 1.5 * IQR auf Q1 - 1.5 * IQR und die Werte über Q3 + 1.5 * IQR auf Q3 + 1.5 * IQR, wodurch die Ausreißer effektiv gekappt werden.
+    df[column] = df[column].clip(lower=lower_bound, upper=upper_bound)
+```
+### Werte der Variablen auf ein Skalenniveau bringen
 # Aufgearbeiteter Datensatz
 - ***Churn*** 
 <br>Datentyp: ***int64*** 
