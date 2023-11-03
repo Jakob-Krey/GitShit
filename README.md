@@ -1,9 +1,10 @@
 # Deskriptive und Explorative beschreibung "Ecommerce Customer Churn"
 
 
-### [Über Den Datensatz](#der-datensatz)
-### [Aufarbeiteung des Datensatzes](#daten-aufarbeiten)
-### [Der Aufgearbeitete Datensatz](#aufgearbeiteter-datensatz)
+## [Über Den Datensatz](#der-datensatz)
+##  [Aufarbeiteung des Datensatzes](#daten-aufarbeiten)
+### [Normalisieren von Variablen](#werte-der-variablen-auf-ein-skalenniveau-bringen-normalisieren)
+##  [Der Aufgearbeitete Datensatz](#aufgearbeiteter-datensatz)
 
 # Der Datensatz
 
@@ -519,8 +520,85 @@ for column in df:
     #Die Methode clip begrenzt die Werte einer Serie auf ein gegebenes Intervall, das durch die Argumente lower und upper festgelegt wird. In diesem Fall setzen wir die Werte unter Q1 - 1.5 * IQR auf Q1 - 1.5 * IQR und die Werte über Q3 + 1.5 * IQR auf Q3 + 1.5 * IQR, wodurch die Ausreißer effektiv gekappt werden.
     df[column] = df[column].clip(lower=lower_bound, upper=upper_bound)
 ```
-### Werte der Variablen auf ein Skalenniveau bringen
+
+### Werte der Variablen auf ein Skalenniveau bringen (Normalisieren)
+- Verwendung der ***Min-Max-Normalisierung*** auf die kontinuierlichen Merkmale `Tenure`, `WarehouseToHome`, `HourSpendOnApp`, `NumberOfDeviceRegistered`, `OrderAmountHikeFromlastYear`, `CouponUsed`, `OrderCount`, `DaySinceLastOrder`, und `CashbackAmount` angewandt, um sicherzustellen, dass jedes Merkmal gleich gewichtet wird. Dies wurde durchgeführt, um den Einfluss unterschiedlicher Wertebereiche auf das Vorhersagemodell zu minimieren.
+
+<details>
+<summary>min, max werte der Ausprägungen</summary>
+
+<br>- ***Tenure*** <br>***Min:*** 0.0 <br>***Max:*** 61.0<br>
+<br>- ***WarehouseToHome*** <br>***Min:*** 5.0 <br>***Max:*** 127.0<br>
+<br>- ***HourSpendOnApp*** <br>***Min:*** 0.0 <br>***Max:*** 5.0<br>
+<br>- ***NumberOfDeviceRegistered*** <br>***Min:*** 1.0 <br>***Max:*** 6.0<br>
+<br>- ***NumberOfAddress*** <br>***Min:*** 1.0 <br>***Max:*** 22.0<br>
+<br>- ***OrderAmountHikeFromlastYear*** <br>***Min:*** 11.0 <br>***Max:*** 26.0<br>
+<br>- ***CouponUsed*** <br>***Min:*** 0.0 <br>***Max:*** 16.0<br>
+<br>- ***OrderCount*** <br>***Min:*** 1.0 <br>***Max:*** 16.0<br>
+<br>- ***DaySinceLastOrder*** <br>***Min:*** 0.0 <br>***Max:*** 46.0<br>
+<br>- ***CashbackAmount*** <br>***Min:*** 0.0 <br>***Max:*** 324.99<br>
+</details>
+
+```python
+# Normalisieren mittels Min-Max-Normalisierung
+from sklearn.preprocessing import MinMaxScaler
+
+features_to_normalize = [
+    'Tenure',
+    'WarehouseToHome',
+    'HourSpendOnApp',
+    'NumberOfDeviceRegistered',
+    'NumberOfAddress',
+    'OrderAmountHikeFromlastYear',
+    'CouponUsed',
+    'OrderCount',
+    'DaySinceLastOrder',
+    'CashbackAmount'
+]
+
+
+# MinMaxScaler initialisieren
+scaler = MinMaxScaler()
+
+scaler.fit(df_with_dummies[features_to_normalize])
+
+# Features im scaler 
+print(scaler.feature_names_in_)
+
+# Feature Ausprägungen ausgeben
+i = 0
+for column in features_to_normalize:
+     print(f"<br>- ***{column}*** <br>***Min:*** {scaler.data_min_[i]} <br>***Max:*** {scaler.data_max_[i]}<br>")
+     i += 1
+
+
+#-------------------------------------------------------------------------------#
+
+# Feature Normalisieren
+# Die transform-Methode des MinMaxScaler gibt ein Numpy-Array zurück
+features_normalized_NumpArray = scaler.transform(df_with_dummies[features_to_normalize])
+
+
+# Konvertieren des Numpy-Arrays zurück in einen DataFrame
+df_normalized = pd.DataFrame(features_normalized_NumpArray, columns=features_to_normalize)
+
+# Sicherstellen das der Index (Die zeilen beider Dataframes) gleich sind
+df_normalized.index = df_with_dummies.index
+
+# neues df erstellen 
+df_with_dummies_and_normalized = df_with_dummies
+
+# das Dataframe mit den Spalten aus den normalisierten Spalten ersetzten
+for column in features_to_normalize:
+    df_with_dummies_and_normalized[column] = df_normalized[column]
+```
+<br>
+
 # Aufgearbeiteter Datensatz
+
+<details>
+<summary>Vor der Normalisierung</summary>
+
 - ***Churn*** 
 <br>Datentyp: ***int64*** 
 <br>Interpretation: 1 = ja ; 0 = nein
@@ -653,8 +731,158 @@ for column in df:
 <br>Interpretation: 
 <br>einzigartige Werte: [ True False]
 
+</details>
+
+<details>
+<summary>Nach der Normalisierung</summary>
+
+- ***Churn*** 
+<br>Datentyp: ***int64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [1 0]
+- ***Tenure*** 
+<br>Datentyp: ***float64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [0.12121212 0.27272727 0.         0.39393939 0.33333333 0.57575758
+ 0.60606061 0.42424242 0.24242424 0.54545455 0.15151515 0.06060606
+ 0.90909091 0.03030303 0.6969697  0.09090909 0.87878788 0.18181818
+ 0.78787879 0.84848485 0.21212121 0.72727273 0.75757576 0.3030303
+ 0.45454545 0.66666667 0.81818182 0.48484848 0.36363636 0.63636364
+ 0.51515152 1.         0.93939394]
+- ***PreferredLoginDevice*** 
+<br>Datentyp: ***int64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [0 1]
+- ***CityTier*** 
+<br>Datentyp: ***int64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [3 1 2]
+- ***WarehouseToHome*** 
+<br>Datentyp: ***float64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [0.03174603 0.0952381  0.79365079 0.31746032 0.22222222 0.53968254
+ 0.19047619 0.12698413 0.82539683 0.41269841 0.25396825 0.47619048
+ 0.76190476 0.73015873 0.66666667 0.28571429 0.15873016 0.6984127
+ 0.38095238 0.57142857 0.88888889 0.44444444 0.95238095 0.6031746
+ 0.34920635 0.63492063 0.85714286 0.92063492 0.50793651
+ 1.0.06349206 0.98412698]
+- ***Gender*** 
+<br>Datentyp: ***int64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [1 0]
+- ***HourSpendOnApp*** 
+<br>Datentyp: ***float64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [0.625 0.375 0.125 0.    0.875 1.   ]
+- ***NumberOfDeviceRegistered*** 
+<br>Datentyp: ***float64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [0.4 0.6 0.8 0.2 0.  1. ]
+- ***SatisfactionScore*** 
+<br>Datentyp: ***int64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [2 3 5 4 1]
+- ***NumberOfAddress*** 
+<br>Datentyp: ***float64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [0.72727273 0.54545455 0.45454545 0.63636364 0.18181818 0.09090909
+ 0.27272727 0.81818182 0.         0.36363636 1.         0.90909091]
+- ***Complain*** 
+<br>Datentyp: ***int64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [1 0]
+- ***OrderAmountHikeFromlastYear*** 
+<br>Datentyp: ***float64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [0.         0.27586207 0.20689655 0.82758621 0.75862069 0.34482759
+ 0.06896552 0.13793103 0.4137931  0.48275862 0.89655172 0.55172414
+ 0.62068966 0.68965517 0.96551724 1.        ]
+- ***CouponUsed*** 
+<br>Datentyp: ***float64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [0.0625 0.     0.25   0.125  0.5625 0.375  0.6875 0.4375 0.75   0.625
+ 0.3125 0.1875 0.8125 0.9375 0.5    0.875  1.    ]
+- ***OrderCount*** 
+<br>Datentyp: ***float64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [0.         0.33333333 0.06666667 0.93333333 0.2        0.4
+ 0.13333333 0.53333333 0.66666667 0.26666667 0.73333333 0.6
+ 0.46666667 0.8        0.86666667 1.        ]
+- ***DaySinceLastOrder*** 
+<br>Datentyp: ***float64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [0.34482759 0.         0.20689655 0.48275862 0.13793103 0.06896552
+ 0.55172414 0.4137931  0.27586207 1.         0.62068966 0.75862069
+ 0.68965517 0.89655172 0.82758621 0.96551724]
+- ***CashbackAmount*** 
+<br>Datentyp: ***float64*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [0.49210745 0.37201145 0.3701037  ... 0.53469338 0.88590418 0.53472415]
+- ***OrderCat_Fashion*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [False  True]
+- ***OrderCat_Grocery*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [False  True]
+- ***OrderCat_Laptop & Accessory*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [ True False]
+- ***OrderCat_Mobile Device*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [False  True]
+- ***OrderCat_Others*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [False  True]
+- ***PaymentMode_Cash on Delivery*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [False  True]
+- ***PaymentMode_Credit Card*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [False  True]
+- ***PaymentMode_Debit Card*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [ True False]
+- ***PaymentMode_E wallet*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [False  True]
+- ***PaymentMode_UPI*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [False  True]
+- ***MartialStatus_Divorced*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [False  True]
+- ***MartialStatus_Married*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [False  True]
+- ***MartialStatus_Single*** 
+<br>Datentyp: ***bool*** 
+<br>Interpretation: 
+<br>einzigartige Werte: [ True False]
+</details>
+
+
 ```python
-# Erneutes ausgeben der Variablen und dessen werte fr den Überarbeiteten Datensatz: 
+# Erneutes ausgeben der Variablen und dessen werte für den Überarbeiteten Datensatz vor der Normalisierung: 
+
+for column in df_with_dummies.columns:
+    print(f"- ***{column}*** \n<br>Datentyp: ***{df_with_dummies[column].dtype}*** \n<br>Interpretation: \n<br>einzigartige Werte: {df_with_dummies[column].unique()}")
+```
+
+
+```python
+# Erneutes ausgeben der Variablen und dessen werte für den Überarbeiteten Datensatz nach der Normalisierung: 
 
 for column in df_with_dummies.columns:
     print(f"- ***{column}*** \n<br>Datentyp: ***{df_with_dummies[column].dtype}*** \n<br>Interpretation: \n<br>einzigartige Werte: {df_with_dummies[column].unique()}")
