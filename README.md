@@ -592,7 +592,21 @@ df_with_dummies_and_normalized = df_with_dummies
 for column in features_to_normalize:
     df_with_dummies_and_normalized[column] = df_normalized[column]
 ```
-<br>
+### Bool werte nummerisch dargestellt 
+
+```python
+# boolische werte in nummerische umwandeln 
+df_with_dummies_and_normalized_and_nummeric = df_with_dummies_and_normalized
+
+for column in df_with_dummies_and_normalized_and_nummeric.columns:
+    if df_with_dummies_and_normalized_and_nummeric[column].dtype == 'bool':
+        print(column)
+        df_with_dummies_and_normalized_and_nummeric[column] = df_with_dummies_and_normalized_and_nummeric[column].astype(int)
+
+df_with_dummies_and_normalized_and_nummeric.head()
+```
+
+
 
 # Aufgearbeiteter Datensatz
 
@@ -736,6 +750,8 @@ for column in features_to_normalize:
 <details>
 <summary>Nach der Normalisierung</summary>
 
+- 0 für `False`, 1 für `True`
+
 - ***Churn*** 
 <br>Datentyp: ***int64*** 
 <br>Interpretation: 
@@ -764,8 +780,7 @@ for column in features_to_normalize:
  0.19047619 0.12698413 0.82539683 0.41269841 0.25396825 0.47619048
  0.76190476 0.73015873 0.66666667 0.28571429 0.15873016 0.6984127
  0.38095238 0.57142857 0.88888889 0.44444444 0.95238095 0.6031746
- 0.34920635 0.63492063 0.85714286 0.92063492 0.50793651
- 1.0.06349206 0.98412698]
+ 0.34920635 0.63492063 0.85714286 0.92063492 0.         0.50793651 1.   0.06349206 0.98412698]
 - ***Gender*** 
 <br>Datentyp: ***int64*** 
 <br>Interpretation: 
@@ -819,57 +834,57 @@ for column in features_to_normalize:
 <br>Interpretation: 
 <br>einzigartige Werte: [0.49210745 0.37201145 0.3701037  ... 0.53469338 0.88590418 0.53472415]
 - ***OrderCat_Fashion*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [False  True]
+<br>einzigartige Werte: [0 1]
 - ***OrderCat_Grocery*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [False  True]
+<br>einzigartige Werte: [0 1]
 - ***OrderCat_Laptop & Accessory*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [ True False]
+<br>einzigartige Werte: [1 0]
 - ***OrderCat_Mobile Device*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [False  True]
+<br>einzigartige Werte: [0 1]
 - ***OrderCat_Others*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [False  True]
+<br>einzigartige Werte: [0 1]
 - ***PaymentMode_Cash on Delivery*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [False  True]
+<br>einzigartige Werte: [0 1]
 - ***PaymentMode_Credit Card*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [False  True]
+<br>einzigartige Werte: [0 1]
 - ***PaymentMode_Debit Card*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [ True False]
+<br>einzigartige Werte: [1 0]
 - ***PaymentMode_E wallet*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [False  True]
+<br>einzigartige Werte: [0 1]
 - ***PaymentMode_UPI*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [False  True]
+<br>einzigartige Werte: [0 1]
 - ***MartialStatus_Divorced*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [False  True]
+<br>einzigartige Werte: [0 1]
 - ***MartialStatus_Married*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [False  True]
+<br>einzigartige Werte: [0 1]
 - ***MartialStatus_Single*** 
-<br>Datentyp: ***bool*** 
+<br>Datentyp: ***int32*** 
 <br>Interpretation: 
-<br>einzigartige Werte: [ True False]
+<br>einzigartige Werte: [1 0]
 </details>
 
 
