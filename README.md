@@ -218,6 +218,11 @@ df_dummies = pd.get_dummies(df['PreferedOrderCat'], prefix='OrderCat')
 # pd.contact => die erstellten dummies zum df hinzufügen 
 df_with_dummies = pd.concat([df, df_dummies], axis=1)
 ```
+
+- Multikollinearität (Sich selbst erklärende Variablen vermeiden) mittels n-1 der dummy variablen
+```python
+
+```
 - Kategriale Variablen nach erzeugung der Dummy-Variablen entfernen
 
 ```pyhon
