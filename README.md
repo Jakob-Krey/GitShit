@@ -211,17 +211,24 @@ df['PreferredLoginDevice'].unique()
 # prefix = Text der vor jedem Wert stehen wird
 # pd.get_dummies => Automatsches Dummy erstellen durch panda
 df_dummies = pd.get_dummies(df['PreferedOrderCat'], prefix='OrderCat')
-# df_dummies erhält den Datentyp "bool" womit Machine Learning-Algorithmen jedoch auch rechenoperationen durchführen können sollten
-
+df_dummies_2 = pd.get_dummies(df['PreferredPaymentMode'], prefix='PaymentMode')
+df_dummies_3 = pd.get_dummies(df['MaritalStatus'], prefix='MartialStatus')
+# df_dummies erhält den Datentyp "bool" womit Machine Learning-Algorithmen jedoch auch rechenoperationen durchführen können sollten (neuste information doch besser in numerische werte umwandlen??????????)
 # die Dummy-Variablen zum ursprünglichen DataFrame hinzufügen
 # 
 # pd.contact => die erstellten dummies zum df hinzufügen 
-df_with_dummies = pd.concat([df, df_dummies], axis=1)
+df_with_dummies = pd.concat([df, df_dummies, df_dummies_2, df_dummies_3], axis=1)
 ```
 
 - Multikollinearität (Sich selbst erklärende Variablen vermeiden) mittels n-1 der dummy variablen
+<br>- für ausprägung `PreferedOrderCat` => `OrderCat_Others` entfernt wenn also alle OrderCat_ = 0 sind, ist  `OrderCat_Others` = 1
+<br>- für feature `PreferredPaymentMode` => `PaymentMode_UPI` entfernt
+<br>- für feature `MaritalStatus`=> `MartialStatus_Divorced`
 ```python
-
+# n-1 variablen erstellen um Multikollinearität zu vermeiden
+df_with_dummies.drop('OrderCat_Others', axis=1, inplace= True)
+df_with_dummies.drop('PaymentMode_UPI', axis=1, inplace= True)
+df_with_dummies.drop('MartialStatus_Divorced', axis=1, inplace= True)
 ```
 - Kategriale Variablen nach erzeugung der Dummy-Variablen entfernen
 
